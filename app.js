@@ -25,39 +25,9 @@ const gameBoard = (() => {
     }
   };
 
-  const checkWin = (arr) => {
-    const winningCombo = [
-      [0, 1, 2],
-      [3, 4, 5],
-      [6, 7, 8],
-      [0, 3, 6],
-      [1, 4, 7],
-      [2, 5, 8],
-      [0, 4, 8],
-      [2, 4, 6],
-    ];
-
-    const tempArr = board.reduce((a, e, i) => {
-      if (e === "x") a.push(i);
-      return a;
-    }, []);
-
-    console.log(tempArr);
-
-    for (let i = 0; i < winningCombo.length; i++) {
-      for (let j = 0; j < winningCombo[i].length; j++) {
-        console.log(winningCombo[i].every((v) => tempArr.includes(v)));
-
-        if (winningCombo[i].every((v) => tempArr.includes(v))) {
-          console.log("x wins");
-        }
-      }
-    }
-  };
-
   const getBoard = () => board;
 
-  return { board, reset, getBoard, marker, checkWin };
+  return { board, reset, getBoard, marker };
 })();
 
 const render = (() => {
@@ -83,16 +53,74 @@ const gameFlow = (() => {
     return activePlayer;
   };
 
+  const endGame = () => {
+    player1 = "";
+    player2 = "";
+  };
+
+  const restart = () => {
+    player1 = "x";
+    player2 = "o";
+  };
+
+  const checkWin = () => {
+    const h1 = document.createElement("h1");
+    gameContainer.append(h1);
+    const winningCombo = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+    ];
+
+    const tempArr = gameBoard.board.reduce((a, e, i) => {
+      if (e === "x") a.push(i);
+      return a;
+    }, []);
+
+    const tempArr2 = gameBoard.board.reduce((a, e, i) => {
+      if (e === "o") a.push(i);
+      return a;
+    }, []);
+
+    console.log(tempArr);
+    console.log(tempArr2);
+
+    for (let i = 0; i < winningCombo.length; i++) {
+      for (let j = 0; j < winningCombo[i].length; j++) {
+        if (winningCombo[i].every((v) => tempArr.includes(v))) {
+          endGame();
+          console.log("x wins");
+        } else if (winningCombo[i].every((v) => tempArr2.includes(v))) {
+          console.log("o wins");
+          endGame();
+        } else {
+          console.log("draw");
+        }
+      }
+    }
+  };
+
   const playRound = () => {
     console.log(`It is player ${activePlayer}'s turn`);
 
     render.makeGrid();
+    checkWin();
   };
 
-  return { switchPlayer, playRound };
+  return { switchPlayer, playRound, endGame, restart };
 })();
 
 const screenController = (() => {
+  const resetBtn = document.createElement("button");
+  resetBtn.textContent = "reset";
+
+  gameContainer.append(resetBtn);
+
   gridCell.forEach((cell) => {
     cell.addEventListener("click", (e) => {
       gameBoard.marker(e.target.dataset.value, gameFlow.switchPlayer());
@@ -100,4 +128,14 @@ const screenController = (() => {
       //   render.makeGrid();
     });
   });
+
+  const resetGame = () => {
+    gameBoard.reset();
+    render.makeGrid();
+    gameFlow.restart();
+  };
+
+  resetBtn.addEventListener("click", resetGame);
+
+  return { resetGame };
 })();
