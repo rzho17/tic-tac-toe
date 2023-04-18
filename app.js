@@ -36,6 +36,23 @@ const gameBoard = (() => {
       [0, 4, 8],
       [2, 4, 6],
     ];
+
+    const tempArr = board.reduce((a, e, i) => {
+      if (e === "x") a.push(i);
+      return a;
+    }, []);
+
+    console.log(tempArr);
+
+    for (let i = 0; i < winningCombo.length; i++) {
+      for (let j = 0; j < winningCombo[i].length; j++) {
+        console.log(winningCombo[i].every((v) => tempArr.includes(v)));
+
+        if (winningCombo[i].every((v) => tempArr.includes(v))) {
+          console.log("x wins");
+        }
+      }
+    }
   };
 
   const getBoard = () => board;
@@ -66,15 +83,21 @@ const gameFlow = (() => {
     return activePlayer;
   };
 
-  return { switchPlayer };
+  const playRound = () => {
+    console.log(`It is player ${activePlayer}'s turn`);
+
+    render.makeGrid();
+  };
+
+  return { switchPlayer, playRound };
 })();
 
-// const test = gameFlow();
 const screenController = (() => {
   gridCell.forEach((cell) => {
     cell.addEventListener("click", (e) => {
       gameBoard.marker(e.target.dataset.value, gameFlow.switchPlayer());
-      render.makeGrid();
+      gameFlow.playRound();
+      //   render.makeGrid();
     });
   });
 })();
