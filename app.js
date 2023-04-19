@@ -47,6 +47,15 @@ const gameFlow = (() => {
 
   let activePlayer = player2;
 
+  function test(e) {
+    gameBoard.marker(e.target.dataset.value, gameFlow.switchPlayer());
+    gameFlow.playRound();
+  }
+
+  const x = gridCell.forEach((cell) => {
+    cell.addEventListener("click", test);
+  });
+
   const switchPlayer = () => {
     activePlayer = activePlayer === player1 ? player2 : player1;
 
@@ -56,16 +65,24 @@ const gameFlow = (() => {
   const endGame = () => {
     player1 = "";
     player2 = "";
+
+    gridCell.forEach((cell) => {
+      cell.removeEventListener("click", test);
+    });
   };
 
   const restart = () => {
     player1 = "x";
     player2 = "o";
+    activePlayer = player2;
+
+    gridCell.forEach((cell) => {
+      cell.addEventListener("click", test);
+    });
   };
 
   const checkWin = () => {
-    const h1 = document.createElement("h1");
-    gameContainer.append(h1);
+    const winner = false;
     const winningCombo = [
       [0, 1, 2],
       [3, 4, 5],
@@ -98,8 +115,13 @@ const gameFlow = (() => {
         } else if (winningCombo[i].every((v) => tempArr2.includes(v))) {
           console.log("o wins");
           endGame();
-        } else {
-          console.log("draw");
+        }
+        if (
+          !gameBoard.board.includes("") &&
+          !winningCombo[i].every((v) => tempArr.includes(v)) &&
+          !winningCombo[i].every((v) => tempArr2.includes(v))
+        ) {
+          endGame();
         }
       }
     }
@@ -121,21 +143,18 @@ const screenController = (() => {
 
   gameContainer.append(resetBtn);
 
-  gridCell.forEach((cell) => {
-    cell.addEventListener("click", (e) => {
-      gameBoard.marker(e.target.dataset.value, gameFlow.switchPlayer());
-      gameFlow.playRound();
-      //   render.makeGrid();
-    });
-  });
-
   const resetGame = () => {
     gameBoard.reset();
     render.makeGrid();
     gameFlow.restart();
   };
 
+  const displayWinner = () => {
+    const h1 = document.createElement("h1");
+    gameContainer.append(h1);
+  };
+
   resetBtn.addEventListener("click", resetGame);
 
-  return { resetGame };
+  return { resetGame, displayWinner };
 })();
