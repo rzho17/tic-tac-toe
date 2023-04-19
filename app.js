@@ -59,13 +59,20 @@ const gameFlow = (() => {
     cell.addEventListener("click", getMarker);
   });
 
+  const displayWinner = (results) => {
+    const h1 = document.createElement("h1");
+    gameContainer.append(h1);
+
+    h1.textContent = `The winner is: ${results}`;
+  };
+
   const switchPlayer = () => {
     activePlayer = activePlayer === player1 ? player2 : player1;
 
     return activePlayer;
   };
 
-  const endGame = () => {
+  const endGame = (results) => {
     player1 = "";
     player2 = "";
     counter = 0;
@@ -73,6 +80,8 @@ const gameFlow = (() => {
     gridCell.forEach((cell) => {
       cell.removeEventListener("click", getMarker);
     });
+
+    displayWinner(results);
   };
 
   const restart = () => {
@@ -114,17 +123,16 @@ const gameFlow = (() => {
         if (winningCombo[i].every((v) => xValues.includes(v))) {
           counter += 1;
           if (counter > 1) {
-            endGame();
+            endGame(activePlayer);
             break;
           }
           //   endGame();
           console.log("x wins");
-        }
-        if (winningCombo[i].every((v) => oValues.includes(v))) {
+        } else if (winningCombo[i].every((v) => oValues.includes(v))) {
           console.log("o wins");
           counter += 1;
           if (counter >= 1) {
-            endGame();
+            endGame(activePlayer);
             break;
           }
         }
@@ -134,8 +142,8 @@ const gameFlow = (() => {
           !winningCombo[i].every((v) => oValues.includes(v))
         ) {
           counter += 1;
-          if (counter >= 21) {
-            endGame();
+          if (counter >= 22) {
+            endGame(".... no one");
             console.log("draw");
           }
         }
@@ -165,14 +173,7 @@ const screenController = (() => {
     gameFlow.restart();
   };
 
-  const displayWinner = (results) => {
-    const h1 = document.createElement("h1");
-    gameContainer.append(h1);
-
-    h1.textContent = results;
-  };
-
   resetBtn.addEventListener("click", resetGame);
 
-  return { resetGame, displayWinner };
+  return { resetGame };
 })();
