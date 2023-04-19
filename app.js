@@ -44,6 +44,7 @@ const render = (() => {
 const gameFlow = (() => {
   let player1 = "x";
   let player2 = "o";
+  let counter = 0;
 
   let activePlayer = player2;
 
@@ -67,6 +68,7 @@ const gameFlow = (() => {
   const endGame = () => {
     player1 = "";
     player2 = "";
+    counter = 0;
 
     gridCell.forEach((cell) => {
       cell.removeEventListener("click", getMarker);
@@ -110,18 +112,32 @@ const gameFlow = (() => {
     for (let i = 0; i < winningCombo.length; i++) {
       for (let j = 0; j < winningCombo[i].length; j++) {
         if (winningCombo[i].every((v) => xValues.includes(v))) {
-          endGame();
+          counter += 1;
+          if (counter > 1) {
+            endGame();
+            break;
+          }
+          //   endGame();
           console.log("x wins");
-        } else if (winningCombo[i].every((v) => oValues.includes(v))) {
+        }
+        if (winningCombo[i].every((v) => oValues.includes(v))) {
           console.log("o wins");
-          endGame();
+          counter += 1;
+          if (counter >= 1) {
+            endGame();
+            break;
+          }
         }
         if (
           !gameBoard.board.includes("") &&
           !winningCombo[i].every((v) => xValues.includes(v)) &&
           !winningCombo[i].every((v) => oValues.includes(v))
         ) {
-          endGame();
+          counter += 1;
+          if (counter >= 21) {
+            endGame();
+            console.log("draw");
+          }
         }
       }
     }
