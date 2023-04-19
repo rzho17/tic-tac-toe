@@ -47,13 +47,15 @@ const gameFlow = (() => {
 
   let activePlayer = player2;
 
-  function test(e) {
-    gameBoard.marker(e.target.dataset.value, gameFlow.switchPlayer());
-    gameFlow.playRound();
+  function getMarker(e) {
+    if (gameBoard.board[e.target.dataset.value] === "") {
+      gameBoard.marker(e.target.dataset.value, gameFlow.switchPlayer());
+      gameFlow.playRound();
+    }
   }
 
-  const x = gridCell.forEach((cell) => {
-    cell.addEventListener("click", test);
+  gridCell.forEach((cell) => {
+    cell.addEventListener("click", getMarker);
   });
 
   const switchPlayer = () => {
@@ -67,7 +69,7 @@ const gameFlow = (() => {
     player2 = "";
 
     gridCell.forEach((cell) => {
-      cell.removeEventListener("click", test);
+      cell.removeEventListener("click", getMarker);
     });
   };
 
@@ -77,12 +79,13 @@ const gameFlow = (() => {
     activePlayer = player2;
 
     gridCell.forEach((cell) => {
-      cell.addEventListener("click", test);
+      cell.addEventListener("click", getMarker);
     });
   };
 
   const checkWin = () => {
-    const winner = false;
+    let xWin = false;
+    let oWin = false;
     const winningCombo = [
       [0, 1, 2],
       [3, 4, 5],
@@ -94,32 +97,29 @@ const gameFlow = (() => {
       [2, 4, 6],
     ];
 
-    const tempArr = gameBoard.board.reduce((a, e, i) => {
+    const xValues = gameBoard.board.reduce((a, e, i) => {
       if (e === "x") a.push(i);
       return a;
     }, []);
 
-    const tempArr2 = gameBoard.board.reduce((a, e, i) => {
+    const oValues = gameBoard.board.reduce((a, e, i) => {
       if (e === "o") a.push(i);
       return a;
     }, []);
 
-    console.log(tempArr);
-    console.log(tempArr2);
-
     for (let i = 0; i < winningCombo.length; i++) {
       for (let j = 0; j < winningCombo[i].length; j++) {
-        if (winningCombo[i].every((v) => tempArr.includes(v))) {
+        if (winningCombo[i].every((v) => xValues.includes(v))) {
           endGame();
           console.log("x wins");
-        } else if (winningCombo[i].every((v) => tempArr2.includes(v))) {
+        } else if (winningCombo[i].every((v) => oValues.includes(v))) {
           console.log("o wins");
           endGame();
         }
         if (
           !gameBoard.board.includes("") &&
-          !winningCombo[i].every((v) => tempArr.includes(v)) &&
-          !winningCombo[i].every((v) => tempArr2.includes(v))
+          !winningCombo[i].every((v) => xValues.includes(v)) &&
+          !winningCombo[i].every((v) => oValues.includes(v))
         ) {
           endGame();
         }
@@ -149,9 +149,11 @@ const screenController = (() => {
     gameFlow.restart();
   };
 
-  const displayWinner = () => {
+  const displayWinner = (results) => {
     const h1 = document.createElement("h1");
     gameContainer.append(h1);
+
+    h1.textContent = results;
   };
 
   resetBtn.addEventListener("click", resetGame);
