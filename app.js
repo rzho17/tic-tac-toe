@@ -7,6 +7,8 @@
 //gameboard will store information about the game
 //create private functions to add array content inside the box
 
+const body = document.querySelector("body");
+const h1 = document.querySelector("h1");
 const gameContainer = document.querySelector("main");
 const gridCell = document.querySelectorAll(".cell");
 
@@ -60,10 +62,10 @@ const gameFlow = (() => {
   });
 
   const displayWinner = (results) => {
-    const h1 = document.createElement("h1");
-    gameContainer.append(h1);
+    const h2 = document.createElement("h2");
+    body.append(h2);
 
-    h1.textContent = `The winner is: ${results}`;
+    h2.textContent = `The winner is: ${results}`;
   };
 
   const switchPlayer = () => {
@@ -85,6 +87,7 @@ const gameFlow = (() => {
   };
 
   const restart = () => {
+    const h2 = document.querySelector("h2");
     player1 = "x";
     player2 = "o";
     activePlayer = player2;
@@ -92,6 +95,8 @@ const gameFlow = (() => {
     gridCell.forEach((cell) => {
       cell.addEventListener("click", getMarker);
     });
+
+    h2.remove();
   };
 
   const checkWin = () => {
@@ -108,14 +113,14 @@ const gameFlow = (() => {
       [2, 4, 6],
     ];
 
-    const xValues = gameBoard.board.reduce((a, e, i) => {
-      if (e === "x") a.push(i);
-      return a;
+    const xValues = gameBoard.board.reduce((arr, compare, i) => {
+      if (compare === "x") arr.push(i);
+      return arr;
     }, []);
 
-    const oValues = gameBoard.board.reduce((a, e, i) => {
-      if (e === "o") a.push(i);
-      return a;
+    const oValues = gameBoard.board.reduce((arr, compare, i) => {
+      if (compare === "o") arr.push(i);
+      return arr;
     }, []);
 
     for (let i = 0; i < winningCombo.length; i++) {
@@ -126,10 +131,7 @@ const gameFlow = (() => {
             endGame(activePlayer);
             break;
           }
-          //   endGame();
-          console.log("x wins");
         } else if (winningCombo[i].every((v) => oValues.includes(v))) {
-          console.log("o wins");
           counter += 1;
           if (counter >= 1) {
             endGame(activePlayer);
@@ -151,21 +153,41 @@ const gameFlow = (() => {
     }
   };
 
+  const currentPlayerHolder = () => {
+    const testContainer = document.createElement("div");
+    h1.append(testContainer);
+    return testContainer;
+  };
+
   const playRound = () => {
-    console.log(`It is player ${activePlayer}'s turn`);
+    console.log(`It is ${activePlayer}'s turn`);
+
+    const test = document.createElement("div");
+    currentPlayerHolder().append(test);
+    test.className = "activePlayer";
+
+    const tempPlayer = activePlayer === player2 ? player1 : player2;
+    test.textContent = `It is ${tempPlayer}'s turn`;
 
     render.makeGrid();
     checkWin();
   };
 
-  return { switchPlayer, playRound, endGame, restart };
+  return {
+    switchPlayer,
+    playRound,
+    endGame,
+    restart,
+    displayWinner,
+    activePlayer,
+  };
 })();
 
 const screenController = (() => {
   const resetBtn = document.createElement("button");
   resetBtn.textContent = "reset";
 
-  gameContainer.append(resetBtn);
+  body.append(resetBtn);
 
   const resetGame = () => {
     gameBoard.reset();
@@ -173,7 +195,19 @@ const screenController = (() => {
     gameFlow.restart();
   };
 
+  const displayActivePlayer = (e) => {
+    const test = document.querySelector(".activePlayer");
+    if (
+      gameBoard.board[e.target.dataset.value] !== "x" ||
+      gameBoard.board[e.target.dataset.value] !== "o"
+    ) {
+      test.remove();
+    }
+  };
+
+  gameContainer.addEventListener("mouseup", displayActivePlayer);
+
   resetBtn.addEventListener("click", resetGame);
 
-  return { resetGame };
+  return { resetGame, displayActivePlayer };
 })();
