@@ -8,8 +8,8 @@ const form = document.querySelector("form");
 let tempImg;
 let foundWinner = false;
 
-let xImg = "url(img/x.png)";
-let oImg = "url(img/o.png)";
+let xImg = "url(img/cross.svg)";
+let oImg = "url(img/circle.svg)";
 
 const gameBoard = (() => {
   const board = ["", "", "", "", "", "", "", "", ""];
@@ -93,7 +93,7 @@ const gameFlow = (() => {
   };
 
   //displays upcoming player turn on board
-  const switchImg = (img) => {
+  const changeImg = (img) => {
     gridCell.forEach((cell) => {
       cell.addEventListener("mouseover", (e) => {
         if (
@@ -147,7 +147,7 @@ const gameFlow = (() => {
     playerTurn.textContent = "";
     showWinner.remove();
     playerTurn.remove();
-    switchImg(tempImg);
+    changeImg(tempImg);
   };
 
   //Will run each time an action happens to check if a player has reached the winning condition.
@@ -236,7 +236,7 @@ const gameFlow = (() => {
     displayWinner,
     activePlayer,
     foundWinner,
-    switchImg,
+    changeImg,
   };
 })();
 
@@ -254,13 +254,13 @@ const screenController = (() => {
   };
 
   gameContainer.addEventListener("click", (e) => {
-    gameFlow.switchImg(tempImg);
+    gameFlow.changeImg(tempImg);
   });
 
   gameContainer.addEventListener("click", (e) => {
     if (foundWinner === true) {
       console.log(foundWinner);
-      gameFlow.switchImg("none");
+      gameFlow.changeImg("none");
     }
   });
 

@@ -20,6 +20,7 @@ h1 {
   height: 500px;
 
   margin: 0 auto;
+
   /* border: 1px solid; */
 }
 
@@ -30,13 +31,10 @@ h1 {
 
   font-size: 5rem;
   border: 1px solid;
-}
 
-.cell:hover {
-  /* background-image: url(img/close_FILL0_wght400_GRAD0_opsz48.png); */
-  /* background-image: url(img/radio_button_unchecked_FILL0_wght400_GRAD0_opsz48.png); */
-  /* background-color: lavender; */
-  /* background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcRBjZgYokO-3YmJNvu0Sc03zSRHAFzRA28CJEc1h0Xw&s); */
+  background-repeat: no-repeat;
+  background-size: 3rem;
+  background-position: center;
 }
 
 .cell:nth-of-type(1),
