@@ -76,6 +76,7 @@ const gameFlow = (() => {
     //checks if the board cell clicked is empty, places the player marker and switches the player, begins the game
     if (gameBoard.board[e.target.dataset.value] === "") {
       gameBoard.marker(e.target.dataset.value, gameFlow.switchPlayer());
+      tempImg = tempImg === oImg ? xImg : oImg;
       gameFlow.playRound();
     }
   }
@@ -146,7 +147,7 @@ const gameFlow = (() => {
     playerTurn.textContent = "";
     showWinner.remove();
     playerTurn.remove();
-    switchImg();
+    switchImg(tempImg);
   };
 
   //Will run each time an action happens to check if a player has reached the winning condition.
@@ -221,9 +222,6 @@ const gameFlow = (() => {
     playerTurn.textContent = `It is ${tempPlayer}'s turn`;
   };
 
-  // gameContainer.addEventListener("click", (e) => {
-  //   console.log(foundWinner);
-  // });
   const playRound = () => {
     currentPlayerDisplay();
     render.makeGrid();
@@ -253,12 +251,9 @@ const screenController = (() => {
     gameBoard.reset();
     render.makeGrid();
     gameFlow.restart();
-    // screenController.blah(xImg);
   };
 
   gameContainer.addEventListener("click", (e) => {
-    gameFlow.switchImg(xImg);
-    tempImg = tempImg === oImg ? xImg : oImg;
     gameFlow.switchImg(tempImg);
   });
 
