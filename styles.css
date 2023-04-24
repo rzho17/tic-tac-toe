@@ -1,3 +1,7 @@
+:root {
+  --light: white;
+}
+
 body {
   margin: 0;
   min-height: 100vh;
@@ -16,7 +20,7 @@ h1 {
   height: 500px;
 
   margin: 0 auto;
-  border: 1px solid;
+  /* border: 1px solid; */
 }
 
 .cell {
@@ -26,4 +30,34 @@ h1 {
 
   font-size: 5rem;
   border: 1px solid;
+}
+
+.cell:hover {
+  /* background-image: url(img/close_FILL0_wght400_GRAD0_opsz48.png); */
+  /* background-image: url(img/radio_button_unchecked_FILL0_wght400_GRAD0_opsz48.png); */
+  /* background-color: lavender; */
+  /* background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcRBjZgYokO-3YmJNvu0Sc03zSRHAFzRA28CJEc1h0Xw&s); */
+}
+
+.cell:nth-of-type(1),
+.cell:nth-of-type(2),
+.cell:nth-of-type(3) {
+  border-top: none;
+}
+
+.cell:nth-of-type(3),
+.cell:nth-of-type(6),
+.cell:nth-of-type(9) {
+  border-right: none;
+}
+.cell:nth-of-type(1),
+.cell:nth-of-type(4),
+.cell:nth-of-type(7) {
+  border-left: none;
+}
+
+.cell:nth-of-type(7),
+.cell:nth-of-type(8),
+.cell:nth-of-type(9) {
+  border-bottom: none;
 }
