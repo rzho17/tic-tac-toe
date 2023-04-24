@@ -2,7 +2,14 @@ const body = document.querySelector("body");
 const h1 = document.querySelector("h1");
 const gameContainer = document.querySelector("main");
 const gridCell = document.querySelectorAll(".cell");
+const singleCell = document.querySelectorAll(".cell");
 const form = document.querySelector("form");
+
+let tempImg;
+let foundWinner = false;
+
+let xImg = "url(img/x.png)";
+let oImg = "url(img/o.png)";
 
 const gameBoard = (() => {
   const board = ["", "", "", "", "", "", "", "", ""];
@@ -41,14 +48,16 @@ const gameFlow = (() => {
   //create elements to hold values for later on
   const playerTurn = document.createElement("div");
   playerTurn.textContent = "";
+  playerTurn.className = "playerTurn";
   const showWinner = document.createElement("h2");
   showWinner.textContent = "";
-  let player1 = "x";
-  let player2 = "o";
+  showWinner.className = "showWinner";
+  let p1Choice = "x";
+  let p2Choice = "o";
   let counter = 0;
 
   let tempPlayer;
-  let activePlayer = player2;
+  let activePlayer = p2Choice;
 
   //   console.log(formData.getAll());
 
@@ -58,20 +67,9 @@ const gameFlow = (() => {
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     const formData = new FormData(form);
-
-    for (item of formData) {
-      if (item[0] === "p1") {
-        p1Name = item[1];
-      }
-      p2Name = item[1];
-
-      console.log(item[0]);
-    }
-
-    // console.log(formData.get());
+    p1Name = formData.get("p1");
+    p2Name = formData.get("p2");
   });
-  // const p1Name = document.querySelector('#p1').value
-  //   const p2Name = prompt("enter your name");
 
   //function to get the value of the grid cell clicked
   function getMarker(e) {
@@ -90,12 +88,31 @@ const gameFlow = (() => {
   const displayWinner = (results) => {
     body.append(showWinner);
 
-    showWinner.textContent = `The winner is: ${results}`;
+    playerTurn.textContent = `The winner is: ${results}`;
+  };
+
+  //displays upcoming player turn on board
+  const switchImg = (img) => {
+    gridCell.forEach((cell) => {
+      cell.addEventListener("mouseover", (e) => {
+        if (
+          gameBoard.board[e.target.dataset.value] !== "x" &&
+          gameBoard.board[e.target.dataset.value] !== "o"
+        )
+          e.target.style.backgroundImage = img;
+      });
+      cell.addEventListener("mouseleave", (e) => {
+        e.target.style.backgroundImage = "none";
+      });
+      cell.addEventListener("mouseup", (e) => {
+        e.target.style.backgroundImage = "none";
+      });
+    });
   };
 
   //switches the active player, if the current player is active to the set player it will switch to the other player
   const switchPlayer = () => {
-    activePlayer = activePlayer === player1 ? player2 : player1;
+    activePlayer = activePlayer === p1Choice ? p2Choice : p1Choice;
 
     return activePlayer;
   };
@@ -108,15 +125,18 @@ const gameFlow = (() => {
       cell.removeEventListener("click", getMarker);
     });
 
+    foundWinner = true;
     displayWinner(results);
   };
 
   //resets everything to initial values
   const restart = () => {
-    player1 = "x";
-    player2 = "o";
-    activePlayer = player2;
+    p1Choice = "x";
+    p2Choice = "o";
+    activePlayer = p2Choice;
     tempPlayer = "";
+    foundWinner = false;
+    tempImg = "";
 
     gridCell.forEach((cell) => {
       cell.addEventListener("click", getMarker);
@@ -126,6 +146,7 @@ const gameFlow = (() => {
     playerTurn.textContent = "";
     showWinner.remove();
     playerTurn.remove();
+    switchImg();
   };
 
   //Will run each time an action happens to check if a player has reached the winning condition.
@@ -196,10 +217,13 @@ const gameFlow = (() => {
     currentPlayerHolder().append(playerTurn);
     playerTurn.className = "activePlayer";
 
-    tempPlayer = activePlayer === player2 ? player1 : player2;
+    tempPlayer = tempPlayer === p2Name ? p1Name : p2Name;
     playerTurn.textContent = `It is ${tempPlayer}'s turn`;
   };
 
+  // gameContainer.addEventListener("click", (e) => {
+  //   console.log(foundWinner);
+  // });
   const playRound = () => {
     currentPlayerDisplay();
     render.makeGrid();
@@ -213,6 +237,8 @@ const gameFlow = (() => {
     restart,
     displayWinner,
     activePlayer,
+    foundWinner,
+    switchImg,
   };
 })();
 
@@ -227,7 +253,21 @@ const screenController = (() => {
     gameBoard.reset();
     render.makeGrid();
     gameFlow.restart();
+    // screenController.blah(xImg);
   };
+
+  gameContainer.addEventListener("click", (e) => {
+    gameFlow.switchImg(xImg);
+    tempImg = tempImg === oImg ? xImg : oImg;
+    gameFlow.switchImg(tempImg);
+  });
+
+  gameContainer.addEventListener("click", (e) => {
+    if (foundWinner === true) {
+      console.log(foundWinner);
+      gameFlow.switchImg("none");
+    }
+  });
 
   resetBtn.addEventListener("click", resetGame);
 
