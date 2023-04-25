@@ -20,9 +20,9 @@ const gameBoard = (() => {
     }
   };
 
-  //places a marker on the board array as long as the current marker doesn't contain an x or o
+  //places a marker on the board array as long as the current marker doesn't contain an X or O
   const marker = (index, value) => {
-    if (board[index] === "" && board[index] !== "x" && board[index] !== "o") {
+    if (board[index] === "" && board[index] !== "X" && board[index] !== "O") {
       board[index] = value;
     }
   };
@@ -50,7 +50,7 @@ const gameFlow = (() => {
   const actionContainer = document.createElement("div");
   actionContainer.className = "actionContainer";
   const playerTurn = document.createElement("div");
-  playerTurn.textContent = "Ready to play? X goes first!";
+  playerTurn.textContent = "Ready To Play? X Goes First!";
   playerTurn.className = "playerTurn";
   header.append(actionContainer);
   actionContainer.append(playerTurn);
@@ -59,8 +59,8 @@ const gameFlow = (() => {
   showWinner.textContent = "";
   showWinner.className = "showWinner";
 
-  let p1Choice = "x";
-  let p2Choice = "o";
+  let p1Choice = "X";
+  let p2Choice = "O";
   let counter = 0;
 
   let tempPlayer;
@@ -68,15 +68,15 @@ const gameFlow = (() => {
 
   //   console.log(formData.getAll());
 
-  let p1Name = "x";
-  let p2Name = "o";
+  let p1Name = "X";
+  let p2Name = "O";
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     const formData = new FormData(form);
     if (formData.get("p1") === "" || formData.get("p2") === "") {
-      p1Name = "x";
-      p2Name = "o";
+      p1Name = "X";
+      p2Name = "O";
     } else {
       p1Name = formData.get("p1");
       p2Name = formData.get("p2");
@@ -101,7 +101,7 @@ const gameFlow = (() => {
   const displayWinner = (results) => {
     // header.append(showWinner);
 
-    playerTurn.textContent = `The winner is: ${results}`;
+    playerTurn.textContent = `THE WINNER IS: ${results}`;
   };
 
   //displays upcoming player turn on board
@@ -109,8 +109,8 @@ const gameFlow = (() => {
     gridCell.forEach((cell) => {
       cell.addEventListener("mouseover", (e) => {
         if (
-          gameBoard.board[e.target.dataset.value] !== "x" &&
-          gameBoard.board[e.target.dataset.value] !== "o"
+          gameBoard.board[e.target.dataset.value] !== "X" &&
+          gameBoard.board[e.target.dataset.value] !== "O"
         )
           e.target.style.backgroundImage = img;
       });
@@ -144,12 +144,12 @@ const gameFlow = (() => {
 
   //resets everything to initial values
   const restart = () => {
-    p1Choice = "x";
-    p2Choice = "o";
+    p1Choice = "X";
+    p2Choice = "O";
     activePlayer = p2Choice;
-    p1Name = "x";
-    p2Name = "o";
-    tempPlayer = p2Name;
+    p1Name = "X";
+    p2Name = "O";
+    tempPlayer = p1Name;
     foundWinner = false;
     tempImg = "";
     console.log(p1Name);
@@ -161,9 +161,10 @@ const gameFlow = (() => {
     });
 
     showWinner.textContent = "";
-    playerTurn.textContent = "";
+    playerTurn.textContent = "X Goes first";
     showWinner.remove();
-    playerTurn.remove();
+    // playerTurn.remove();
+    actionContainer.remove();
     changeImg(tempImg);
   };
 
@@ -183,13 +184,13 @@ const gameFlow = (() => {
 
     //creates an array to hold the indexes which contain an X in gameBoard.board's array.
     const xValues = gameBoard.board.reduce((arr, compare, i) => {
-      if (compare === "x") arr.push(i);
+      if (compare === "X") arr.push(i);
       return arr;
     }, []);
 
-    //Same as above but for o values.
+    //Same as above but for O values.
     const oValues = gameBoard.board.reduce((arr, compare, i) => {
-      if (compare === "o") arr.push(i);
+      if (compare === "O") arr.push(i);
       return arr;
     }, []);
 
@@ -267,7 +268,7 @@ const gameFlow = (() => {
 const screenController = (() => {
   const resetBtn = document.createElement("button");
   resetBtn.className = "reset";
-  resetBtn.textContent = "reset";
+  resetBtn.textContent = "RESET";
 
   form.append(resetBtn);
 
