@@ -8,8 +8,10 @@ const form = document.querySelector("form");
 let tempImg;
 let foundWinner = false;
 
-let xImg = "url(img/cross.svg)";
-let oImg = "url(img/circle.svg)";
+// let xImg = "url(img/cross.svg)";
+let xImg = "X";
+// let oImg = "url(img/circle.svg)";
+let oImg = "O";
 
 const gameBoard = (() => {
   const board = ["", "", "", "", "", "", "", "", ""];
@@ -110,15 +112,30 @@ const gameFlow = (() => {
       cell.addEventListener("mouseover", (e) => {
         if (
           gameBoard.board[e.target.dataset.value] !== "X" &&
-          gameBoard.board[e.target.dataset.value] !== "O"
+          gameBoard.board[e.target.dataset.value] !== "O" &&
+          foundWinner === false
         )
-          e.target.style.backgroundImage = img;
+          // e.target.style.backgroundImage = img;
+          e.target.textContent = img;
       });
       cell.addEventListener("mouseleave", (e) => {
-        e.target.style.backgroundImage = "none";
+        // e.target.style.backgroundImage = "none";
+        if (
+          gameBoard.board[e.target.dataset.value] !== "X" &&
+          gameBoard.board[e.target.dataset.value] !== "O" &&
+          foundWinner === false
+        )
+          // e.target.style.backgroundImage = img;
+          e.target.textContent = "";
       });
       cell.addEventListener("mouseup", (e) => {
-        e.target.style.backgroundImage = "none";
+        // e.target.style.backgroundImage = "none";
+        if (
+          gameBoard.board[e.target.dataset.value] !== "X" &&
+          gameBoard.board[e.target.dataset.value] !== "O" &&
+          foundWinner === false
+        )
+          e.target.textContent = "";
       });
     });
   };
@@ -137,7 +154,6 @@ const gameFlow = (() => {
     gridCell.forEach((cell) => {
       cell.removeEventListener("click", getMarker);
     });
-
     foundWinner = true;
     displayWinner(results);
   };
