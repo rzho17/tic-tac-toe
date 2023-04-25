@@ -133,12 +133,13 @@ input:focus {
 
   background-color: var(--light);
   border: none;
-  color: var(--dark);
+  color: var(--highlight);
 }
 
 .reset {
   font-size: 0.8rem;
   width: auto;
+  color: #a4233d;
 }
 
 footer {
