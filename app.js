@@ -1,8 +1,8 @@
 const body = document.querySelector("body");
 const h1 = document.querySelector("h1");
+const header = document.querySelector("header");
 const gameContainer = document.querySelector("main");
 const gridCell = document.querySelectorAll(".cell");
-const singleCell = document.querySelectorAll(".cell");
 const form = document.querySelector("form");
 
 let tempImg;
@@ -44,14 +44,21 @@ const render = (() => {
   return { makeGrid };
 })();
 
+//controls game flow for the game
 const gameFlow = (() => {
   //create elements to hold values for later on
+  const actionContainer = document.createElement("div");
+  actionContainer.className = "actionContainer";
   const playerTurn = document.createElement("div");
-  playerTurn.textContent = "";
+  playerTurn.textContent = "Ready to play? X goes first!";
   playerTurn.className = "playerTurn";
+  header.append(actionContainer);
+  actionContainer.append(playerTurn);
+
   const showWinner = document.createElement("h2");
   showWinner.textContent = "";
   showWinner.className = "showWinner";
+
   let p1Choice = "x";
   let p2Choice = "o";
   let counter = 0;
@@ -67,8 +74,13 @@ const gameFlow = (() => {
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     const formData = new FormData(form);
-    p1Name = formData.get("p1");
-    p2Name = formData.get("p2");
+    if (formData.get("p1") === "" || formData.get("p2") === "") {
+      p1Name = "x";
+      p2Name = "o";
+    } else {
+      p1Name = formData.get("p1");
+      p2Name = formData.get("p2");
+    }
   });
 
   //function to get the value of the grid cell clicked
@@ -87,7 +99,7 @@ const gameFlow = (() => {
   });
 
   const displayWinner = (results) => {
-    body.append(showWinner);
+    // header.append(showWinner);
 
     playerTurn.textContent = `The winner is: ${results}`;
   };
@@ -135,9 +147,14 @@ const gameFlow = (() => {
     p1Choice = "x";
     p2Choice = "o";
     activePlayer = p2Choice;
-    tempPlayer = "";
+    p1Name = "x";
+    p2Name = "o";
+    tempPlayer = p2Name;
     foundWinner = false;
     tempImg = "";
+    console.log(p1Name);
+    console.log(p2Name);
+    console.log(tempPlayer);
 
     gridCell.forEach((cell) => {
       cell.addEventListener("click", getMarker);
@@ -209,22 +226,29 @@ const gameFlow = (() => {
   };
 
   const currentPlayerHolder = () => {
-    const testContainer = document.createElement("div");
-    h1.append(testContainer);
-    return testContainer;
+    const actionContainer = document.createElement("div");
+    actionContainer.className = "actionContainer";
+    header.append(actionContainer);
+    return actionContainer;
   };
 
   const currentPlayerDisplay = () => {
+    const actionContainer = document.querySelector(".actionContainer");
     currentPlayerHolder().append(playerTurn);
-    playerTurn.className = "activePlayer";
+    // playerTurn.className = "activePlayer";
 
     tempPlayer = tempPlayer === p2Name ? p1Name : p2Name;
+    console.log(p1Name);
+    console.log(p2Name);
+    console.log(tempPlayer);
     playerTurn.textContent = `It is ${tempPlayer}'s turn`;
+
+    actionContainer.remove();
   };
 
   const playRound = () => {
-    currentPlayerDisplay();
     render.makeGrid();
+    currentPlayerDisplay();
     checkWin();
   };
 
@@ -245,7 +269,7 @@ const screenController = (() => {
   resetBtn.className = "reset";
   resetBtn.textContent = "reset";
 
-  body.append(resetBtn);
+  form.append(resetBtn);
 
   const resetGame = () => {
     gameBoard.reset();
