@@ -8,9 +8,7 @@ const form = document.querySelector("form");
 let tempImg;
 let foundWinner = false;
 
-// let xImg = "url(img/cross.svg)";
 let xImg = "X";
-// let oImg = "url(img/circle.svg)";
 let oImg = "O";
 
 const gameBoard = (() => {
@@ -68,8 +66,6 @@ const gameFlow = (() => {
   let tempPlayer;
   let activePlayer = p2Choice;
 
-  //   console.log(formData.getAll());
-
   let p1Name = "X";
   let p2Name = "O";
 
@@ -101,8 +97,6 @@ const gameFlow = (() => {
   });
 
   const displayWinner = (results) => {
-    // header.append(showWinner);
-
     playerTurn.textContent = `THE WINNER IS: ${results}`;
   };
 
@@ -115,21 +109,23 @@ const gameFlow = (() => {
           gameBoard.board[e.target.dataset.value] !== "O" &&
           foundWinner === false
         )
-          // e.target.style.backgroundImage = img;
           e.target.textContent = img;
+        // e.target.style.color = "red";
+        if (e.target.textContent === "O") {
+          e.target.style.color = "#a4233d";
+        } else {
+          e.target.style.color = "#22a39f";
+        }
       });
       cell.addEventListener("mouseleave", (e) => {
-        // e.target.style.backgroundImage = "none";
         if (
           gameBoard.board[e.target.dataset.value] !== "X" &&
           gameBoard.board[e.target.dataset.value] !== "O" &&
           foundWinner === false
         )
-          // e.target.style.backgroundImage = img;
           e.target.textContent = "";
       });
       cell.addEventListener("mouseup", (e) => {
-        // e.target.style.backgroundImage = "none";
         if (
           gameBoard.board[e.target.dataset.value] !== "X" &&
           gameBoard.board[e.target.dataset.value] !== "O" &&
@@ -179,7 +175,6 @@ const gameFlow = (() => {
     showWinner.textContent = "";
     playerTurn.textContent = "X Goes first";
     showWinner.remove();
-    // playerTurn.remove();
     actionContainer.remove();
     changeImg(tempImg);
   };
@@ -252,12 +247,8 @@ const gameFlow = (() => {
   const currentPlayerDisplay = () => {
     const actionContainer = document.querySelector(".actionContainer");
     currentPlayerHolder().append(playerTurn);
-    // playerTurn.className = "activePlayer";
 
     tempPlayer = tempPlayer === p2Name ? p1Name : p2Name;
-    console.log(p1Name);
-    console.log(p2Name);
-    console.log(tempPlayer);
     playerTurn.textContent = `It is ${tempPlayer}'s turn`;
 
     actionContainer.remove();

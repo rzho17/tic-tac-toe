@@ -34,7 +34,6 @@ h1 {
 .playerTurn {
   margin: 0 auto;
   margin-top: 1rem;
-  /* margin: 5rem; */
 }
 
 .header {
@@ -50,8 +49,6 @@ h1 {
   height: 500px;
 
   margin: 0 auto;
-
-  /* border: 1px solid; */
 }
 
 .cell {
@@ -69,7 +66,8 @@ h1 {
 }
 
 .cell:hover {
-  /* background-color: var(--light); */
+  background-color: var(--light);
+  opacity: 70%;
 }
 
 .cell:nth-of-type(1),
@@ -96,13 +94,10 @@ h1 {
 }
 
 .reset {
-  /* width: max-content; */
   margin: 0 auto;
 }
 
 form {
-  /* width: max-content; */
-  /* width: 10rem; */
   margin: 3rem auto;
 
   font-size: 2rem;
@@ -125,10 +120,9 @@ input {
 }
 
 input:focus {
-  /* border-style: 1px solid red; */
   outline: var(--light);
-  /* border: 1px solid red; */
 }
+
 .submit,
 .reset {
   font-size: 1.5rem;
